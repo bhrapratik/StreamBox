@@ -5,12 +5,17 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.focus.focusRestorer
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.tv.material3.MaterialTheme
@@ -21,6 +26,7 @@ import com.streambox.core.model.RailStyle
 import com.streambox.tv.ui.components.TvLandscapeCard
 import com.streambox.tv.ui.components.TvLogoCard
 import com.streambox.tv.ui.components.TvPosterCard
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -32,7 +38,12 @@ fun TvRailRow(
     modifier: Modifier = Modifier,
     itemModifier: (index: Int, item: Content) -> Modifier = { _, _ -> Modifier },
 ) {
-    Column(modifier) {
+    val bringIntoView = remember { BringIntoViewRequester() }
+    val scope = rememberCoroutineScope()
+    Column(
+        modifier
+            .bringIntoViewRequester(bringIntoView)
+    ) {
         Text(
             text = rail.title,
             style = MaterialTheme.typography.titleMedium,
@@ -47,6 +58,11 @@ fun TvRailRow(
         ) {
             itemsIndexed(rail.items, key = { _, item -> item.id }) { index, item ->
 
+                val onFocused = {
+                    onItemFocused(item)
+                    scope.launch { bringIntoView.bringIntoView() }   // ← whole row (title + cards) on every focus
+                    Unit
+                }
                 val cardModifier = itemModifier(index, item).then(
                     // Last card: → goes nowhere instead of jumping into another row
                     if (index == rail.items.lastIndex) {
@@ -54,9 +70,9 @@ fun TvRailRow(
                     } else Modifier
                 )
                 when (rail.style) {
-                    RailStyle.Poster -> TvPosterCard(item, { onItemClick(item) }, { onItemFocused(item) }, cardModifier)
-                    RailStyle.Landscape -> TvLandscapeCard(item, { onItemClick(item) }, { onItemFocused(item) }, cardModifier)
-                    RailStyle.Logo -> TvLogoCard(item, { onItemClick(item) }, { onItemFocused(item) }, cardModifier)
+                    RailStyle.Poster -> TvPosterCard(item, { onItemClick(item) }, onFocused, cardModifier)
+                    RailStyle.Landscape -> TvLandscapeCard(item, { onItemClick(item) }, onFocused, cardModifier)
+                    RailStyle.Logo -> TvLogoCard(item, { onItemClick(item) }, onFocused, cardModifier)
                 }
             }
         }

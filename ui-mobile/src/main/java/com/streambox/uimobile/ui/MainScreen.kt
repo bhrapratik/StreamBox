@@ -80,11 +80,6 @@ fun MainScreen(
             topBar = {
                 CenterAlignedTopAppBar(
                     title = { Text("StreamBox", fontWeight = FontWeight.Bold) },
-                    actions = {
-                        IconButton(onClick = { /* Step 9: Search */ }) {
-                            Icon(Icons.Outlined.Search, contentDescription = "Search")
-                        }
-                    },
                     colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                         containerColor = StreamColors.Background,
                     ),

@@ -58,9 +58,11 @@ fun HeroPager(
                 state = pagerState,
                 modifier = if (wide) {
                     // ~40% of screen height → rails stay visible on car / landscape
-                    Modifier.fillMaxWidth().height((screenHeight * 0.42f).coerceAtLeast(200.dp))
+                    Modifier
+                        .fillMaxWidth()
+                        .height((screenHeight * 0.42f).coerceAtLeast(200.dp))
                 } else {
-                    Modifier.fillMaxWidth().aspectRatio(3f / 4f)
+                    Modifier.fillMaxWidth().height(screenHeight * 0.45f)
                 },
             ) { page ->
                 HeroItem(
@@ -104,19 +106,29 @@ private fun HeroItem(
 ) {
     Box(Modifier.fillMaxSize()) {
         AsyncImage(
-            model = if (wide) item.backdropUrl ?: item.posterUrl else item.posterUrl ?: item.backdropUrl,
+            model = if (wide) item.backdropUrl ?: item.posterUrl else item.posterUrl
+                ?: item.backdropUrl,
             contentDescription = item.title,
             contentScale = ContentScale.Crop,
-            alignment = if (wide) Alignment.CenterEnd else Alignment.Center,
+            alignment = if (wide) Alignment.CenterEnd else Alignment.TopCenter,
             modifier = Modifier.fillMaxSize(),
         )
 
         // Scrim: left-to-right when wide, so text sits on the dark side
         Box(
-            Modifier.fillMaxSize().background(
-                if (wide) Brush.horizontalGradient(0f to StreamColors.Background, 0.55f to Color.Transparent)
-                else Brush.verticalGradient(0.4f to Color.Transparent, 1f to StreamColors.Background)
-            )
+            Modifier
+                .fillMaxSize()
+                .background(
+                    if (wide) Brush.horizontalGradient(
+                        0f to StreamColors.Background,
+                        0.55f to Color.Transparent
+                    )
+                    else Brush.verticalGradient(
+                        0.35f to Color.Transparent,
+                        0.7f to StreamColors.Background.copy(alpha = 0.85f),
+                        1f to StreamColors.Background,
+                    )
+                )
         )
 
         Column(
@@ -195,7 +207,9 @@ private fun PagerDots(count: Int, current: Int, modifier: Modifier = Modifier) {
                     .padding(horizontal = 4.dp)
                     .size(width = width, height = 8.dp)
                     .background(
-                        if (index == current) StreamColors.Primary else StreamColors.Muted.copy(alpha = 0.5f),
+                        if (index == current) StreamColors.Primary else StreamColors.Muted.copy(
+                            alpha = 0.5f
+                        ),
                         CircleShape,
                     )
             )

@@ -107,7 +107,7 @@ private fun SectionTitle(text: String) {
 @Composable
 private fun AboutText() {
     Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-        Text("StreamBox — Android mobile + TV learning project.")
+        Text("StreamBox — Android phone, TV and Automotive learning project.")
         Text("Movie and TV data and images: The Movie Database (TMDB).", color = StreamColors.Muted)
         Text("This product uses the TMDB API but is not endorsed or certified by TMDB.", color = StreamColors.Muted)
         Text("TV schedule data: TVmaze (CC BY-SA).", color = StreamColors.Muted)

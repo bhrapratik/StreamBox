@@ -83,6 +83,7 @@ class HomeRepositoryImpl @Inject constructor(
     private suspend fun providerRail(): List<Content> =
         tmdb.watchProviders().results
             .sortedBy { it.displayPriorities[TmdbConfig.REGION] ?: Int.MAX_VALUE }
+            .distinctBy { it.providerName.substringBefore(" ").lowercase() }
             .take(12)
             .map { it.toContent() }
 

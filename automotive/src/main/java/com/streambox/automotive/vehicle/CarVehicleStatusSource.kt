@@ -7,6 +7,7 @@ import android.car.drivingstate.CarUxRestrictionsManager
 import android.car.hardware.CarPropertyValue
 import android.car.hardware.property.CarPropertyManager
 import android.content.Context
+import android.util.Log
 import com.streambox.core.vehicle.VehicleState
 import com.streambox.core.vehicle.VehicleStatusSource
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -24,6 +25,7 @@ class CarVehicleStatusSource @Inject constructor(
         val uxManager = car.getCarManager(Car.CAR_UX_RESTRICTION_SERVICE) as CarUxRestrictionsManager
         val propertyManager = car.getCarManager(Car.PROPERTY_SERVICE) as CarPropertyManager
 
+
         var current = VehicleState(
             drivingRestricted = uxManager.currentCarUxRestrictions.isRequiresDistractionOptimization,
         )
@@ -35,6 +37,18 @@ class CarVehicleStatusSource @Inject constructor(
             trySend(current)
         }
 
+        fun readInitial() {
+            runCatching {
+                val speed = propertyManager.getFloatProperty(VehiclePropertyIds.PERF_VEHICLE_SPEED, 0)
+                current = current.copy(speedKmh = speed * 3.6f)
+            }.onFailure { Log.w("Vehicle", "speed read failed", it) }
+            runCatching {
+                val gear = propertyManager.getIntProperty(VehiclePropertyIds.GEAR_SELECTION, 0)
+                current = current.copy(gear = gearLabel(gear))
+            }.onFailure { Log.w("Vehicle", "gear read failed", it) }
+            trySend(current)
+        }
+        readInitial()
         // Raw properties from the Vehicle HAL
         val callback = object : CarPropertyManager.CarPropertyEventCallback {
             override fun onChangeEvent(value: CarPropertyValue<*>) {
@@ -51,16 +65,10 @@ class CarVehicleStatusSource @Inject constructor(
         }
 
         // SecurityException if the permission isn't granted yet → section shows "unknown"
-        runCatching {
-            propertyManager.registerCallback(
-                callback, VehiclePropertyIds.PERF_VEHICLE_SPEED, CarPropertyManager.SENSOR_RATE_ONCHANGE,
-            )
-        }
-        runCatching {
-            propertyManager.registerCallback(
-                callback, VehiclePropertyIds.GEAR_SELECTION, CarPropertyManager.SENSOR_RATE_ONCHANGE,
-            )
-        }
+        runCatching { propertyManager.registerCallback(callback, VehiclePropertyIds.PERF_VEHICLE_SPEED, CarPropertyManager.SENSOR_RATE_ONCHANGE) }
+            .onFailure { Log.w("Vehicle", "speed subscribe failed", it) }
+        runCatching { propertyManager.registerCallback(callback, VehiclePropertyIds.GEAR_SELECTION, CarPropertyManager.SENSOR_RATE_ONCHANGE) }
+            .onFailure { Log.w("Vehicle", "gear subscribe failed", it) }
 
         awaitClose {
             uxManager.unregisterListener()
@@ -68,6 +76,7 @@ class CarVehicleStatusSource @Inject constructor(
             car.disconnect()
         }
     }
+
 
     private fun gearLabel(gear: Int) = when (gear) {
         VehicleGear.GEAR_PARK -> "P"

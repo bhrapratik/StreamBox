@@ -82,6 +82,12 @@ fun TvMainScreen(
                             selected = destination == dest,
                             onClick = { destination = dest },
                             leadingContent = { Icon(dest.icon, contentDescription = null) },
+                            colors = NavigationDrawerItemDefaults.colors(
+                                focusedContainerColor = TvColors.Primary,
+                                focusedContentColor = Color.Black,
+                                selectedContainerColor = TvColors.Surface,
+                                selectedContentColor = Color.White,
+                            ),
                             modifier = if (destination == dest) Modifier.focusRequester(
                                 selectedItemFocus
                             ) else Modifier,
@@ -92,19 +98,11 @@ fun TvMainScreen(
                 }
             },
         ) {
-            when (destination) {
-                TvDestination.Home -> TvHomeScreen(
-                    onBackdropChange = { backdropUrl = it },
-                    onContentClick = onContentClick,
-                )
-
-                TvDestination.Search -> TvSearchScreen(
-                    onContentClick = onContentClick,
-                )
-                TvDestination.Profile -> TvProfileScreen()
-
-                else -> Box(Modifier.fillMaxSize(), Alignment.Center) {
-                    Text("${destination.label} – coming soon")
+            Box(Modifier.fillMaxSize().padding(start = 80.dp)) {   // ← width of the collapsed icon rail
+                when (destination) {
+                    TvDestination.Home -> TvHomeScreen(onBackdropChange = { backdropUrl = it }, onContentClick = onContentClick)
+                    TvDestination.Search -> TvSearchScreen(onContentClick = onContentClick)
+                    TvDestination.Profile -> TvProfileScreen()
                 }
             }
         }

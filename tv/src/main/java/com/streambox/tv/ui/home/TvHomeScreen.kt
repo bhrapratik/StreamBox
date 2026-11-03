@@ -27,6 +27,7 @@ import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 
 import com.streambox.core.model.Content
+import com.streambox.core.model.ContentType
 import com.streambox.core.model.HomeFeed
 import com.streambox.core.model.Rail
 import com.streambox.core.model.RailStyle
@@ -131,8 +132,8 @@ private fun TvHomeContent(
             item = shown,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(200.dp)
-                .padding(start = 24.dp, top = 40.dp, end = 48.dp),
+                .height(230.dp)
+                .padding(start = 24.dp, top = 40.dp, end = 48.dp,bottom = 20.dp),
         )
 
         CompositionLocalProvider(LocalBringIntoViewSpec provides pinSpec) {
@@ -154,7 +155,7 @@ private fun TvHomeContent(
                             listState = if (railIndex == 0) firstRowState else null,
                             onItemClick = onContentClick,
                             onItemFocused = { item ->
-                                focused = item
+                                if (item.type != ContentType.Provider) focused = item   // logos don't replace the hero
                                 lastFocusedKey = "${rail.id}/${item.id}"
                             },
                             itemModifier = { index, item ->
@@ -204,8 +205,8 @@ private fun HeroInfo(item: Content?, modifier: Modifier = Modifier) {
             Spacer(Modifier.height(8.dp))
             Text(
                 text = item.description,
-                style = MaterialTheme.typography.bodyLarge,
-                maxLines = 3,
+                style = MaterialTheme.typography.bodyMedium,
+                maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.fillMaxWidth(0.55f),
             )

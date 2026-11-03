@@ -49,6 +49,11 @@ fun TvProfileScreen(viewModel: SettingsViewModel = hiltViewModel()) {
                             contentDescription = "Selected"
                         )
                     },
+                    colors = ListItemDefaults.colors(
+                        focusedContainerColor = TvColors.Surface,
+                        focusedContentColor = Color.White,
+                        selectedContainerColor = TvColors.Surface.copy(alpha = 0.6f),
+                    ),
                 )
             }
         }
@@ -61,7 +66,7 @@ fun TvProfileScreen(viewModel: SettingsViewModel = hiltViewModel()) {
                 fontWeight = FontWeight.Bold
             )
             Spacer(Modifier.height(8.dp))
-            Text("StreamBox — Android mobile + TV learning project.")
+            Text("StreamBox — Android phone, TV and Automotive learning project.")
             Text("Movie and TV data and images: The Movie Database (TMDB).", color = TvColors.Muted)
             Text(
                 "This product uses the TMDB API but is not endorsed or certified by TMDB.",
