@@ -2,31 +2,55 @@ package com.streambox.mobile.ui.theme
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
-import com.streambox.core.design.BrandPalette
+import androidx.compose.ui.graphics.luminance
+import com.streambox.core.design.AppTheme
 
-object StreamColors {
-    val Background = Color(BrandPalette.Background)
-    val Surface = Color(BrandPalette.Surface)
-    val Primary = Color(BrandPalette.Primary)
-    val OnBackground = Color.White
-    val Muted = Color(BrandPalette.Muted)
-}
-
-private val colors = darkColorScheme(
-    primary = StreamColors.Primary,
-    onPrimary = Color.Black,
-    background = StreamColors.Background,
-    onBackground = StreamColors.OnBackground,
-    surface = StreamColors.Background,
-    onSurface = StreamColors.OnBackground,
-    surfaceVariant = StreamColors.Surface,
-    onSurfaceVariant = StreamColors.Muted,
-    surfaceContainer = StreamColors.Background, // NavigationBar background
+data class StreamPalette(
+    val background: Color,
+    val surface: Color,
+    val primary: Color,
+    val muted: Color,
 )
 
+fun AppTheme.toPalette() = StreamPalette(
+    background = Color(background),
+    surface = Color(surface),
+    primary = Color(primary),
+    muted = Color(muted),
+)
+
+private val LocalStreamPalette = staticCompositionLocalOf { AppTheme.Default.toPalette() }
+
+/** Same call sites as before (StreamColors.Primary), but now reads the current theme. */
+object StreamColors {
+    val Background: Color @Composable @ReadOnlyComposable get() = LocalStreamPalette.current.background
+    val Surface: Color @Composable @ReadOnlyComposable get() = LocalStreamPalette.current.surface
+    val Primary: Color @Composable @ReadOnlyComposable get() = LocalStreamPalette.current.primary
+    val Muted: Color @Composable @ReadOnlyComposable get() = LocalStreamPalette.current.muted
+    val OnBackground = Color.White
+}
+
 @Composable
-fun StreamBoxTheme(content: @Composable () -> Unit) {
-    MaterialTheme(colorScheme = colors, content = content)
+fun StreamBoxTheme(theme: AppTheme, content: @Composable () -> Unit) {
+    val palette = remember(theme) { theme.toPalette() }
+    val onPrimary =
+        if (palette.primary.luminance() > 0.5f) Color.Black else Color.White  // readable on amber/teal
+
+    val colors = darkColorScheme(
+        primary = palette.primary,
+        onPrimary = onPrimary,
+        background = palette.background,
+        onBackground = Color.White,
+        surface = palette.background,
+        onSurface = Color.White,
+        surfaceVariant = palette.surface,
+        onSurfaceVariant = palette.muted,
+        surfaceContainer = palette.background,
+    )
+
+    CompositionLocalProvider(LocalStreamPalette provides palette) {
+        MaterialTheme(colorScheme = colors, content = content)
+    }
 }

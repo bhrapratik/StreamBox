@@ -68,6 +68,16 @@ class TmdbApi @Inject constructor(
             parameter("language", language)
             parameter("append_to_response", "credits")
         }.body()
+
+    suspend fun searchMulti(
+        query: String,
+        language: String = TmdbConfig.LANGUAGE,
+    ): TmdbPage<TmdbMediaDto> =
+        client.get("search/multi") {
+            parameter("query", query)
+            parameter("include_adult", false)
+            parameter("language", language)
+        }.body()
 }
 object TmdbConfig {
     const val REGION = "SE"

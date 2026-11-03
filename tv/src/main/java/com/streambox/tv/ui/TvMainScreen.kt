@@ -26,18 +26,21 @@ import androidx.tv.material3.*
 import coil3.compose.AsyncImage
 import com.streambox.core.model.Content
 import com.streambox.tv.ui.home.TvHomeScreen
+import com.streambox.tv.ui.profile.TvProfileScreen
+import com.streambox.tv.ui.search.TvSearchScreen
 import com.streambox.tv.ui.theme.TvColors
 
 enum class TvDestination(val label: String, val icon: ImageVector) {
     Search("Search", Icons.Outlined.Search),
     Home("Home", Icons.Outlined.Home),
-    MyList("My list", Icons.Outlined.BookmarkBorder),
-    Settings("Settings", Icons.Outlined.Settings),
+    Profile("Profile", Icons.Outlined.Person),
 }
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun TvMainScreen(onContentClick : (Content) -> Unit) {
+fun TvMainScreen(
+    onContentClick: (Content) -> Unit,
+) {
     var destination by rememberSaveable { mutableStateOf(TvDestination.Home) }
     var backdropUrl by remember { mutableStateOf<String?>(null) }
     val drawerState = rememberDrawerState(DrawerValue.Closed)
@@ -79,7 +82,9 @@ fun TvMainScreen(onContentClick : (Content) -> Unit) {
                             selected = destination == dest,
                             onClick = { destination = dest },
                             leadingContent = { Icon(dest.icon, contentDescription = null) },
-                            modifier = if (destination == dest) Modifier.focusRequester(selectedItemFocus) else Modifier,
+                            modifier = if (destination == dest) Modifier.focusRequester(
+                                selectedItemFocus
+                            ) else Modifier,
                         ) {
                             Text(dest.label)
                         }
@@ -92,6 +97,12 @@ fun TvMainScreen(onContentClick : (Content) -> Unit) {
                     onBackdropChange = { backdropUrl = it },
                     onContentClick = onContentClick,
                 )
+
+                TvDestination.Search -> TvSearchScreen(
+                    onContentClick = onContentClick,
+                )
+                TvDestination.Profile -> TvProfileScreen()
+
                 else -> Box(Modifier.fillMaxSize(), Alignment.Center) {
                     Text("${destination.label} – coming soon")
                 }
@@ -114,14 +125,18 @@ private fun TvBackdrop(url: String?) {
             }
         }
         Box(
-            Modifier.fillMaxSize().background(
-                Brush.horizontalGradient(0f to TvColors.Background, 0.6f to Color.Transparent)
-            )
+            Modifier
+                .fillMaxSize()
+                .background(
+                    Brush.horizontalGradient(0f to TvColors.Background, 0.6f to Color.Transparent)
+                )
         )
         Box(
-            Modifier.fillMaxSize().background(
-                Brush.verticalGradient(0.35f to Color.Transparent, 1f to TvColors.Background)
-            )
+            Modifier
+                .fillMaxSize()
+                .background(
+                    Brush.verticalGradient(0.35f to Color.Transparent, 1f to TvColors.Background)
+                )
         )
     }
 }

@@ -55,6 +55,13 @@ dependencies {
     implementation(libs.ktor.serialization.kotlinx.json)
     implementation(libs.ktor.client.logging)
 
+    implementation(libs.media3.exoplayer)
+    implementation(libs.media3.exoplayer.hls)
+    implementation(libs.media3.session)
+    implementation(libs.kotlinx.coroutines.guava)   // ListenableFuture.await()
+
+    implementation(libs.androidx.datastore.preferences)
+
     testImplementation(libs.junit)
     testImplementation(libs.ktor.client.mock)
     androidTestImplementation(libs.androidx.espresso.core)

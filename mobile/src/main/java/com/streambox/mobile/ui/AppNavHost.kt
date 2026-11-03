@@ -8,11 +8,17 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.streambox.core.model.hasDetails
 import com.streambox.mobile.ui.details.DetailsScreen
+import com.streambox.mobile.ui.player.PlayerScreen
 import kotlinx.serialization.Serializable
 
 @Serializable object MainRoute
 @Serializable data class DetailsRoute(val contentId: String)
 
+@Serializable data class PlayerRoute(
+    val contentId: String,
+    val title: String,
+    val artworkUrl: String? = null,
+)
 @Composable
 fun AppNavHost() {
     val navController = rememberNavController()
@@ -29,7 +35,13 @@ fun AppNavHost() {
             composable<DetailsRoute> {
                 DetailsScreen(
                     onBack = { navController.popBackStack() },
-                    onPlay = { /* Step 7: player */ },
+                    onPlay = { d -> navController.navigate(PlayerRoute(d.id, d.title, d.backdropUrl)) },
+                )
+            }
+
+            composable<PlayerRoute> {
+                PlayerScreen(
+                    onBack = { navController.popBackStack() },
                 )
             }
         }

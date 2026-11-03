@@ -11,11 +11,18 @@ import androidx.tv.material3.Surface
 import androidx.tv.material3.SurfaceDefaults
 import com.streambox.core.model.hasDetails
 import com.streambox.tv.ui.home.detail.TvDetailsScreen
+import com.streambox.tv.ui.player.TvPlayerScreen
 import com.streambox.tv.ui.theme.TvColors
 import kotlinx.serialization.Serializable
 
 @Serializable object TvMainRoute
 @Serializable data class TvDetailsRoute(val contentId: String)
+
+@Serializable data class PlayerRoute(
+    val contentId: String,
+    val title: String,
+    val artworkUrl: String? = null,
+)
 
 @Composable
 fun TvNavHost() {
@@ -34,8 +41,10 @@ fun TvNavHost() {
                 )
             }
             composable<TvDetailsRoute> {
-                TvDetailsScreen(onPlay = { /* Step 7 */ })
+                TvDetailsScreen(onPlay = { d -> navController.navigate(PlayerRoute(d.id, d.title, d.backdropUrl)) })
             }
+            composable<PlayerRoute> { TvPlayerScreen() }
+
         }
     }
 }

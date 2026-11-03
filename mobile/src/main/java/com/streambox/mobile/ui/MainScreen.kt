@@ -13,12 +13,13 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import com.streambox.core.model.Content
 import com.streambox.mobile.ui.home.HomeScreen
+import com.streambox.mobile.ui.profile.ProfileScreen
+import com.streambox.mobile.ui.search.SearchScreen
 import com.streambox.mobile.ui.theme.StreamColors
 
 enum class Tab(val label: String, val selectedIcon: ImageVector, val icon: ImageVector) {
     Home("Home", Icons.Filled.Home, Icons.Outlined.Home),
     Search("Search", Icons.Filled.Search, Icons.Outlined.Search),
-    MyList("My list", Icons.Filled.Bookmark, Icons.Outlined.BookmarkBorder),
     Profile("Profile", Icons.Filled.Person, Icons.Outlined.Person),
 }
 
@@ -68,6 +69,8 @@ fun MainScreen(
         val contentModifier = Modifier.padding(padding)
         when (selected) {
             Tab.Home -> HomeScreen(onContentClick = onContentClick, modifier = contentModifier)
+            Tab.Search -> SearchScreen(onContentClick = onContentClick, modifier = contentModifier)
+            Tab.Profile -> ProfileScreen(modifier = contentModifier)
             else -> Box(contentModifier.fillMaxSize(), Alignment.Center) {
                 Text("${selected.label} – coming soon")
             }
