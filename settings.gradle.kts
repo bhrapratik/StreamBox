@@ -26,3 +26,5 @@ rootProject.name = "StreamBox"
 include(":mobile")
 include(":core")
 include(":tv")
+include(":ui-mobile")
+include(":automotive")

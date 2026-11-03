@@ -8,8 +8,8 @@ import androidx.activity.viewModels
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.streambox.core.ui.setting.SettingsViewModel
-import com.streambox.mobile.ui.AppNavHost
-import com.streambox.mobile.ui.theme.StreamBoxTheme
+import com.streambox.uimobile.ui.AppNavHost
+import com.streambox.uimobile.ui.theme.StreamBoxTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
