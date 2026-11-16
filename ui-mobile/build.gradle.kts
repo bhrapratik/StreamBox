@@ -23,6 +23,9 @@ android {
 dependencies {
     api(project(":core"))   // apps using ui-mobile also see core's models/ViewModels
 
+    debugImplementation(libs.profiler)
+    releaseImplementation(libs.profiler.noop)
+
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.ui)

@@ -12,6 +12,8 @@ appcompat = "1.8.0"
 material = "1.14.0"
 
 lifecycle = "2.11.0"
+profiler = "0.1.2"
+profilerNoop = "0.1.2"
 tvMaterial = "1.1.0"
 coroutines = "1.11.0"
 hilt = "2.60.1"
@@ -45,6 +47,7 @@ material = { group = "com.google.android.material", name = "material", version.r
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycle" }
 androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycle" }
 
+
 tv-material = { module = "androidx.tv:tv-material", version.ref = "tvMaterial" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
 
@@ -73,6 +76,11 @@ media3-ui = { module = "androidx.media3:media3-ui", version.ref = "media3" }
 kotlinx-coroutines-guava = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-guava", version.ref = "coroutines" }
 
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
+
+
+# ComposeProfiler library from my Compose Profiler Repository
+profiler = { module = "io.github.bhrapratik.composeprofiler:profiler", version.ref = "profiler" }
+profiler-noop = { module = "io.github.bhrapratik.composeprofiler:profiler-noop", version.ref = "profilerNoop" }
 
 
 [plugins]

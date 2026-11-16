@@ -20,6 +20,7 @@ import com.streambox.uimobile.ui.home.HomeScreen
 import com.streambox.uimobile.ui.profile.ProfileScreen
 import com.streambox.uimobile.ui.search.SearchScreen
 import com.streambox.uimobile.ui.theme.StreamColors
+import io.github.bhrapratik.composeprofiler.TrackRecompositions
 
 
 enum class Tab(val label: String, val selectedIcon: ImageVector, val icon: ImageVector) {
@@ -33,6 +34,7 @@ enum class Tab(val label: String, val selectedIcon: ImageVector, val icon: Image
 fun MainScreen(
     onContentClick: (Content) -> Unit,
 ) {
+    TrackRecompositions("MainScreen")
     var selected by rememberSaveable { mutableStateOf(Tab.Home) }
 
     val wide = isWideLayout()

@@ -12,6 +12,7 @@ import com.streambox.core.ui.setting.SettingsViewModel
 import com.streambox.uimobile.ui.AppNavHost
 import com.streambox.uimobile.ui.theme.StreamBoxTheme
 import dagger.hilt.android.AndroidEntryPoint
+import io.github.bhrapratik.composeprofiler.ComposeProfiler
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -25,12 +26,15 @@ class MainActivity : ComponentActivity() {
             navigationBarStyle = SystemBarStyle.dark(android.graphics.Color.TRANSPARENT),
         )
         setContent {
-            val theme by settingsViewModel.theme.collectAsStateWithLifecycle()
-            theme?.let { current ->                 // null = first DataStore read not done yet (a few ms)
-                StreamBoxTheme(current) {
-                    AppNavHost()
+            ComposeProfiler {
+                val theme by settingsViewModel.theme.collectAsStateWithLifecycle()
+                theme?.let { current ->                 // null = first DataStore read not done yet (a few ms)
+                    StreamBoxTheme(current) {
+                        AppNavHost()
+                    }
                 }
             }
+
         }
     }
 }

@@ -39,6 +39,9 @@ android {
 dependencies {
     implementation(project(":ui-mobile"))     // ← replaces project(":core"); core comes via api
 
+    debugImplementation(libs.profiler)
+    releaseImplementation(libs.profiler.noop)
+
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.ui)

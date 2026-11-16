@@ -16,6 +16,7 @@ import com.streambox.core.model.Content
 import com.streambox.core.model.HomeFeed
 import com.streambox.core.ui.home.HomeUiState
 import com.streambox.core.ui.home.HomeViewModel
+import io.github.bhrapratik.composeprofiler.TrackRecompositions
 
 @Composable
 fun HomeScreen(
@@ -23,6 +24,7 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
+    TrackRecompositions("HomeScreen")
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     when (val s = state) {
@@ -44,6 +46,7 @@ fun HomeScreen(
 
 @Composable
 private fun HomeContent(feed: HomeFeed, onContentClick: (Content) -> Unit, modifier: Modifier) {
+    TrackRecompositions("HomeContent")
     LazyColumn(modifier.fillMaxSize()) {
         if (feed.hero.isNotEmpty()) {
             item(key = "hero", contentType = "hero") {
