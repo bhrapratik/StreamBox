@@ -48,8 +48,7 @@ changes.
      into the retry path.
 4. A retry re-runs the full `Loading` → `search(q)` → `Results`/`Empty`/
    `Error` sequence — same as a normal search (per answered question: show
-   Loading on retry).  Assert `repository.queries.last() == "inter"` before 400ms has
-   elapsed since `onQueryChange("interst")`.
+   Loading on retry).
 5. If `retry()` is called again while a previous retry's `search()` call is
    still suspended, the latest retry wins and cancels the in-flight one —
    the same `flatMapLatest` cancellation semantics that already apply to
@@ -92,7 +91,8 @@ Each item is one test; each names the line/behavior whose removal breaks it.
    (within the 400ms debounce window, so no search fires for it yet); then
    `retry()`. Expect the repository is called with `"inter"`, not
    `"interst"`. Breaks if `retry()` reads `query`/`queryFlow.value` instead
-   of the tracked `lastSearchedQuery`.
+   of the tracked `lastSearchedQuery`. Assert `repository.queries.last() == "inter"` before 400ms has
+   elapsed since `onQueryChange("interst")`.
 5. **a second retry cancels the first (latest wins)** — query fails; call
    `retry()` against a repository whose `search()` suspends long enough to
    observe overlap; before it resolves, call `retry()` again (repository
