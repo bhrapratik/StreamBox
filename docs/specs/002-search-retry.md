@@ -38,7 +38,9 @@ changes.
    distinctUntilChanged entirely — e.g. a `MutableSharedFlow<String>`
    (`retryTrigger`) merged with the debounced query flow, both feeding the
    same `flatMapLatest` block. A value arriving via this path must reach
-   `search()` with no 400ms wait.
+   `search()` with no 400ms wait. Use `MutableSharedFlow<String>(extraBufferCapacity = 1)` and
+   `tryEmit` in `retry()` — a no-buffer SharedFlow drops tryEmit
+   values while collected.
 3. `fun retry()`:
    - If `state.value` is not `SearchUiState.Error`, no-op (per answered
      question: only acts on Error).
@@ -46,7 +48,8 @@ changes.
      into the retry path.
 4. A retry re-runs the full `Loading` → `search(q)` → `Results`/`Empty`/
    `Error` sequence — same as a normal search (per answered question: show
-   Loading on retry).
+   Loading on retry).  Assert `repository.queries.last() == "inter"` before 400ms has
+   elapsed since `onQueryChange("interst")`.
 5. If `retry()` is called again while a previous retry's `search()` call is
    still suspended, the latest retry wins and cancels the in-flight one —
    the same `flatMapLatest` cancellation semantics that already apply to
