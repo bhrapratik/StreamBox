@@ -8,6 +8,9 @@ MutableStateFlow, not Compose mutableStateOf (testability)"), replace the
 pipeline's input with a `MutableStateFlow<String>` while leaving the
 ViewModel's public surface (`query`, `onQueryChange`) and all observable
 behavior unchanged.
+The point is testability: with MutableStateFlow, tests can start the
+pipeline first, then type, then advance virtual time — which snapshotFlow
+doesn't support in JVM unit tests.
 
 ## Context
 
@@ -23,10 +26,9 @@ behavior unchanged.
   — reads `viewModel.query` (plain `String`) for `OutlinedTextField`'s
   `value`, calls `viewModel.onQueryChange(it)` on change. This call site is
   why the public surface must not change shape.
-- `tv/src/main/java/com/streambox/tv/ui/search/TvSearchScreen.kt` — not yet
-  read in detail; flagged because `:tv` depends on `:core` directly and may
-  also bind to `query`/`onQueryChange`. Confirm before merging that it
-  doesn't need changes either.
+- `tv/src/main/java/com/streambox/tv/ui/search/TvSearchScreen.kt:61-62` — binds
+  `viewModel.query` and `viewModel::onQueryChange`, same as SearchScreen.
+  Public surface must stay unchanged for both.
 
 ## Requirements
 
@@ -65,36 +67,25 @@ behavior unchanged.
 
 ## Acceptance
 
-All 5 existing tests in `SearchViewModelTest.kt` must pass **unmodified**
-(no edits to the test file's assertions or timing style — `advanceUntilIdle`
-stays, per explicit decision not to introduce `advanceTimeBy` in this task):
+Existing tests 1–4 must still pass. Each names the line that breaks it:
+1. short query stays Idle — breaks if `q.length < 2` check is removed
+2. Loading then Results — breaks if `emit(SearchUiState.Loading)` is removed
+3. Empty with query — breaks if `items.isEmpty()` branch is removed
+4. failure emits Error — breaks if the `catch (e: Exception)` is removed
 
-1. `short query stays Idle without hitting the repository` — fails if the
-   `q.length < 2` → `Idle` short-circuit breaks, or if the repository gets
-   called for a 1-character query.
-2. `typing a query emits Loading then Results` — fails if the
-   `MutableStateFlow` pipeline drops the `Loading` emission or doesn't reach
-   `search()`.
-3. `no results emits Empty with the query` — fails if the `Empty(query)`
-   branch stops carrying the right query string.
-4. `repository failure emits Error` — fails if exception handling in
-   `search()` regresses (e.g. a non-`CancellationException` escapes instead
-   of mapping to `SearchUiState.Error`).
-5. `rapid typing only searches the debounced query` — the most important
-   regression check for this refactor: fails if `MutableStateFlow` doesn't
-   coalesce rapid `onQueryChange` calls the same way `snapshotFlow` did
-   (e.g. if intermediate values like `"d"`, `"du"`, `"dun"` leak through to
-   the repository instead of only `"dune"`).
+Test 5 ("rapid typing") is kept but does NOT guard debounce: all input
+happens before the pipeline starts. Debounce is guarded by new tests 6–7.
 
-One new test to cover the invariant this refactor introduces (two fields —
-`query` and `queryFlow` — that must stay in sync):
+New tests (subscribe, runCurrent(), THEN type, then advanceTimeBy):
+6. `search waits for 400ms of silence` — "du", +399ms → no repository call;
+   +2ms → queries == ["du"].
+   Breaks if `.debounce(400.milliseconds)` is removed or shortened.
+7. `burst of typing searches only the last query` — "du", +100ms, "dun",
+   +100ms, "dune", +401ms → queries == ["dune"].
+   Breaks if `.debounce(...)` is removed.
 
-6. `onQueryChange updates query immediately, before debounce fires` —
-   assert `viewModel.query == "d"` right after calling
-   `onQueryChange("d")`, with **no** `advanceUntilIdle()`/`advanceTimeBy()`
-   call first. Fails if `query` is only updated via the debounced flow
-   (making the TextField appear to lag behind typing) instead of
-   synchronously in `onQueryChange`.
+Mutation check (required): delete `.debounce(400.milliseconds)`, run tests,
+confirm 6 and 7 fail, restore it.
 
 ## Verify
 
@@ -106,8 +97,5 @@ One new test to cover the invariant this refactor introduces (two fields —
 
 - Changes to `SearchScreen.kt` or `TvSearchScreen.kt` (confirmed: public
   `SearchViewModel` surface doesn't change, so no call-site edits needed).
-- Rewriting existing tests to use `advanceTimeBy` instead of
-  `advanceUntilIdle` (explicitly declined for this task — could be a
-  separate follow-up spec if the team wants stricter timing assertions).
 - Any change to debounce duration, minimum query length, or `SearchUiState`
   shape.
