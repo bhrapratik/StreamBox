@@ -8,6 +8,8 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -18,6 +20,7 @@ import kotlinx.coroutines.flow.flow
 
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 import kotlin.coroutines.cancellation.CancellationException
@@ -33,20 +36,33 @@ class SearchViewModel @Inject constructor(
         private set
 
     private val queryFlow = MutableStateFlow("")
+    private val retryTrigger = MutableSharedFlow<String>(
+        extraBufferCapacity = 1,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST,
+    )
+    private var lastSearchedQuery: String = ""
 
     fun onQueryChange(value: String) {
         query = value
         queryFlow.value = value
     }
 
+    fun retry() {
+        if (state.value is SearchUiState.Error) {
+            retryTrigger.tryEmit(lastSearchedQuery)
+        }
+    }
 
-    val state: StateFlow<SearchUiState> = queryFlow
+    private val debouncedQueryFlow = queryFlow
         .map { it.trim() }
         .debounce(400.milliseconds)
         .distinctUntilChanged()
+
+    val state: StateFlow<SearchUiState> = merge(debouncedQueryFlow, retryTrigger)
         .flatMapLatest { q ->
             if (q.length < 2) flowOf(SearchUiState.Idle)
             else flow<SearchUiState> {
+                lastSearchedQuery = q
                 emit(SearchUiState.Loading)
                 emit(search(q))
             }

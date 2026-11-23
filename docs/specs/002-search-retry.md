@@ -93,11 +93,26 @@ Each item is one test; each names the line/behavior whose removal breaks it.
    `"interst"`. Breaks if `retry()` reads `query`/`queryFlow.value` instead
    of the tracked `lastSearchedQuery`. Assert `repository.queries.last() == "inter"` before 400ms has
    elapsed since `onQueryChange("interst")`.
-5. **a second retry cancels the first (latest wins)** — query fails; call
-   `retry()` against a repository whose `search()` suspends long enough to
-   observe overlap; before it resolves, call `retry()` again (repository
-   configured to return a different result the second time); expect the
-   final state reflects only the second call's result, and the first call's
+5. **a retry in flight is cancelled by a subsequent typed query (shared
+   `flatMapLatest` wins)** — *(retargeted during implementation: the
+   literal "call `retry()` twice while the first is still suspended"
+   scenario is architecturally unreachable — reaching the first retry's
+   `search()` flips `state.value` to `Loading`, which blocks a second
+   `retry()` at the req. 3 guard; calling `retry()` twice with zero
+   dispatcher ticks in between instead hits req. 2's
+   `extraBufferCapacity = 1`, which drops the second `tryEmit` before it
+   ever reaches `flatMapLatest`. Neither path exercises cancellation.
+   Confirmed by direct reproduction during review. The fake repository was
+   also fixed to capture `result`/`error` at `search()` call-start rather
+   than at completion — otherwise a call that should have been cancelled
+   could read a config mutation made after it started and coincidentally
+   agree with the winning call, masking a `flatMapMerge` regression.
+   Re-verified by swapping in `flatMapMerge` directly: the test now fails
+   as expected.)*
+   Query fails; `retry()` starts a slow `search()` for the failed query;
+   while it's still suspended, a new typed query (via `onQueryChange` +
+   elapsed debounce) arrives on the *same* merged pipeline; expect the
+   final state reflects only the typed query's result, and the retry's
    result is never emitted. Breaks if the retry path uses `flatMapMerge`/
    `flatMapConcat` instead of `flatMapLatest`-style cancellation, or if two
    independent collectors are started instead of one shared pipeline.
