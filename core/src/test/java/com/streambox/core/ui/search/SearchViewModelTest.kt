@@ -117,6 +117,60 @@ class SearchViewModelTest {
         }
     }
 
+    @Test
+    fun `search waits for 400ms of silence`() = runTest {
+        val repository = FakeSearchRepository(result = listOf(content("Dune")))
+        val viewModel = SearchViewModel(repository)
+
+        viewModel.state.test {
+            assertEquals(SearchUiState.Idle, awaitItem())
+
+            viewModel.onQueryChange("du")
+            dispatcher.scheduler.runCurrent()
+
+            dispatcher.scheduler.advanceTimeBy(399)
+            dispatcher.scheduler.runCurrent()
+            assertEquals(emptyList<String>(), repository.queries)
+
+            dispatcher.scheduler.advanceTimeBy(2)
+            dispatcher.scheduler.runCurrent()
+            assertEquals(listOf("du"), repository.queries)
+
+            assertEquals(SearchUiState.Loading, awaitItem())
+            assertEquals(SearchUiState.Results(listOf(content("Dune"))), awaitItem())
+        }
+    }
+
+    @Test
+    fun `burst of typing searches only the last query`() = runTest {
+        val repository = FakeSearchRepository(result = listOf(content("Dune")))
+        val viewModel = SearchViewModel(repository)
+
+        viewModel.state.test {
+            assertEquals(SearchUiState.Idle, awaitItem())
+
+            viewModel.onQueryChange("du")
+            dispatcher.scheduler.runCurrent()
+            dispatcher.scheduler.advanceTimeBy(100)
+            dispatcher.scheduler.runCurrent()
+
+            viewModel.onQueryChange("dun")
+            dispatcher.scheduler.runCurrent()
+            dispatcher.scheduler.advanceTimeBy(100)
+            dispatcher.scheduler.runCurrent()
+
+            viewModel.onQueryChange("dune")
+            dispatcher.scheduler.runCurrent()
+            dispatcher.scheduler.advanceTimeBy(401)
+            dispatcher.scheduler.runCurrent()
+
+            assertEquals(listOf("dune"), repository.queries)
+
+            assertEquals(SearchUiState.Loading, awaitItem())
+            assertEquals(SearchUiState.Results(listOf(content("Dune"))), awaitItem())
+        }
+    }
+
     private fun content(title: String) = Content(
         id = "movie:$title",
         type = ContentType.Movie,

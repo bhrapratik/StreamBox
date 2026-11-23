@@ -3,12 +3,12 @@ package com.streambox.core.ui.search
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.debounce
@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 import kotlin.coroutines.cancellation.CancellationException
@@ -31,12 +32,16 @@ class SearchViewModel @Inject constructor(
     var query by mutableStateOf("")
         private set
 
+    private val queryFlow = MutableStateFlow("")
+
     fun onQueryChange(value: String) {
         query = value
+        queryFlow.value = value
     }
 
 
-    val state: StateFlow<SearchUiState> = snapshotFlow { query.trim() }
+    val state: StateFlow<SearchUiState> = queryFlow
+        .map { it.trim() }
         .debounce(400.milliseconds)
         .distinctUntilChanged()
         .flatMapLatest { q ->
