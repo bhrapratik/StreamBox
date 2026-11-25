@@ -13,6 +13,7 @@ Implement the spec at $ARGUMENTS using this workflow. Follow it exactly.
 5. REVIEW: use the android-reviewer subagent with the spec path and
    `git diff main...HEAD` plus uncommitted changes.
 6. LOOP: fix every BLOCKER and MAJOR, then repeat steps 4–5.
-   Max 2 review rounds. If still not APPROVE, stop and report.
-   7. FINISH: don't commit. Show: plan vs. done, test result,
-      final reviewer verdict, open MINOR findings, git diff --stat.
+   Max 2 review rounds. If still not APPROVE, stop and report. After round 2, you may fix remaining findings, but mark the result
+   UNREVIEWED and tell me to run /review before committing.
+7. FINISH: don't commit. Show: plan vs. done, test result,
+   final reviewer verdict, open MINOR findings, git diff --stat.

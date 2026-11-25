@@ -1,0 +1,17 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>MagicNumber:StreamBoxCarApp.kt:StreamBoxCarApp$0.25</ID>
+    <ID>MagicNumber:StreamBoxCarApp.kt:StreamBoxCarApp$100L</ID>
+    <ID>MagicNumber:StreamBoxCarApp.kt:StreamBoxCarApp$1024</ID>
+    <ID>MaxLineLength:CarVehicleStatusSource.kt:CarVehicleStatusSource$runCatching { propertyManager.registerCallback(callback, VehiclePropertyIds.GEAR_SELECTION, CarPropertyManager.SENSOR_RATE_ONCHANGE) }</ID>
+    <ID>MaxLineLength:CarVehicleStatusSource.kt:CarVehicleStatusSource$runCatching { propertyManager.registerCallback(callback, VehiclePropertyIds.PERF_VEHICLE_SPEED, CarPropertyManager.SENSOR_RATE_ONCHANGE) }</ID>
+    <ID>NewLineAtEndOfFile:CarMainActivity.kt:com.streambox.automotive.CarMainActivity.kt</ID>
+    <ID>NewLineAtEndOfFile:CarModule.kt:com.streambox.automotive.vehicle.CarModule.kt</ID>
+    <ID>NewLineAtEndOfFile:CarVehicleStatusSource.kt:com.streambox.automotive.vehicle.CarVehicleStatusSource.kt</ID>
+    <ID>NewLineAtEndOfFile:ExampleUnitTest.kt:com.streambox.automotive.ExampleUnitTest.kt</ID>
+    <ID>NewLineAtEndOfFile:StreamBoxCarApp.kt:com.streambox.automotive.StreamBoxCarApp.kt</ID>
+    <ID>WildcardImport:ExampleUnitTest.kt:import org.junit.Assert.*</ID>
+  </CurrentIssues>
+</SmellBaseline>

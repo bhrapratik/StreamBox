@@ -171,6 +171,166 @@ class SearchViewModelTest {
         }
     }
 
+    @Test
+    fun `retry on Error re-runs the failed query and succeeds`() = runTest {
+        val repository = FakeSearchRepository(error = IllegalStateException("boom"))
+        val viewModel = SearchViewModel(repository)
+
+        viewModel.state.test {
+            assertEquals(SearchUiState.Idle, awaitItem())
+
+            viewModel.onQueryChange("inter")
+            dispatcher.scheduler.advanceUntilIdle()
+
+            assertEquals(SearchUiState.Loading, awaitItem())
+            assertEquals(SearchUiState.Error("boom"), awaitItem())
+
+            val item = content("Interstellar")
+            repository.error = null
+            repository.result = listOf(item)
+
+            viewModel.retry()
+            dispatcher.scheduler.advanceUntilIdle()
+
+            assertEquals(SearchUiState.Loading, awaitItem())
+            assertEquals(SearchUiState.Results(listOf(item)), awaitItem())
+            assertEquals(listOf("inter", "inter"), repository.queries)
+        }
+    }
+
+    @Test
+    fun `retry is immediate, no debounce wait`() = runTest {
+        val repository = FakeSearchRepository(error = IllegalStateException("boom"))
+        val viewModel = SearchViewModel(repository)
+
+        viewModel.state.test {
+            assertEquals(SearchUiState.Idle, awaitItem())
+
+            viewModel.onQueryChange("inter")
+            dispatcher.scheduler.advanceUntilIdle()
+
+            assertEquals(SearchUiState.Loading, awaitItem())
+            assertEquals(SearchUiState.Error("boom"), awaitItem())
+
+            viewModel.retry()
+            dispatcher.scheduler.runCurrent()
+
+            assertEquals(listOf("inter", "inter"), repository.queries)
+            assertEquals(SearchUiState.Loading, awaitItem())
+
+            dispatcher.scheduler.advanceUntilIdle()
+            assertEquals(SearchUiState.Error("boom"), awaitItem())
+        }
+    }
+
+    @Test
+    fun `retry no-ops outside Error state`() = runTest {
+        val repository = FakeSearchRepository(result = listOf(content("Dune")))
+        val viewModel = SearchViewModel(repository)
+
+        viewModel.state.test {
+            assertEquals(SearchUiState.Idle, awaitItem())
+
+            // Idle
+            viewModel.retry()
+            dispatcher.scheduler.advanceUntilIdle()
+            expectNoEvents()
+            assertEquals(emptyList<String>(), repository.queries)
+
+            viewModel.onQueryChange("dune")
+            dispatcher.scheduler.runCurrent()
+            assertEquals(SearchUiState.Loading, awaitItem())
+
+            // Loading
+            viewModel.retry()
+            dispatcher.scheduler.runCurrent()
+            expectNoEvents()
+            assertEquals(listOf("dune"), repository.queries)
+
+            dispatcher.scheduler.advanceUntilIdle()
+            assertEquals(SearchUiState.Results(listOf(content("Dune"))), awaitItem())
+
+            // Results
+            viewModel.retry()
+            dispatcher.scheduler.advanceUntilIdle()
+            expectNoEvents()
+            assertEquals(listOf("dune"), repository.queries)
+        }
+    }
+
+    @Test
+    fun `retry uses the last searched query, not the current unsubmitted text`() = runTest {
+        val repository = FakeSearchRepository(error = IllegalStateException("boom"))
+        val viewModel = SearchViewModel(repository)
+
+        viewModel.state.test {
+            assertEquals(SearchUiState.Idle, awaitItem())
+
+            viewModel.onQueryChange("inter")
+            dispatcher.scheduler.advanceUntilIdle()
+
+            assertEquals(SearchUiState.Loading, awaitItem())
+            assertEquals(SearchUiState.Error("boom"), awaitItem())
+
+            viewModel.onQueryChange("interst")
+            dispatcher.scheduler.advanceTimeBy(100)
+            dispatcher.scheduler.runCurrent()
+
+            viewModel.retry()
+            dispatcher.scheduler.runCurrent()
+
+            // repository.queries already shows the retried "inter" call, even though
+            // "interst" was typed afterward and its own 400ms debounce has not elapsed.
+            assertEquals(listOf("inter", "inter"), repository.queries)
+            assertEquals(SearchUiState.Loading, awaitItem())
+
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `a retry in flight is cancelled by a subsequent typed query`() = runTest {
+        // Retargeted from "a second retry cancels the first": reaching the first
+        // retry's search() flips state to Loading, which blocks a second retry()
+        // at the req. 3 guard, and firing both retry() calls before any dispatcher
+        // tick instead hits req. 2's extraBufferCapacity = 1, which drops the
+        // second tryEmit before it ever reaches flatMapLatest. Neither path puts
+        // two values through flatMapLatest. A typed query racing an in-flight
+        // retry does, and still proves the shared-pipeline cancellation semantics
+        // (flatMapLatest, not flatMapMerge/flatMapConcat, and one collector, not two).
+        val repository = FakeSearchRepository(error = IllegalStateException("boom"), delayMs = 500)
+        val viewModel = SearchViewModel(repository)
+
+        viewModel.state.test {
+            assertEquals(SearchUiState.Idle, awaitItem())
+
+            viewModel.onQueryChange("inter")
+            dispatcher.scheduler.advanceUntilIdle()
+
+            assertEquals(SearchUiState.Loading, awaitItem())
+            assertEquals(SearchUiState.Error("boom"), awaitItem())
+
+            val retryResult = content("Interstellar")
+            val typedResult = content("Intermission")
+            repository.error = null
+            repository.result = listOf(retryResult)
+
+            viewModel.retry()
+            dispatcher.scheduler.runCurrent()
+            assertEquals(SearchUiState.Loading, awaitItem())
+
+            // The retry's search() is now suspended on a 500ms delay. A typed query
+            // arrives (its 400ms debounce resolves before the retry's 500ms delay
+            // does), so flatMapLatest must cancel the still-suspended retry search.
+            viewModel.onQueryChange("dune")
+            repository.result = listOf(typedResult)
+            dispatcher.scheduler.advanceUntilIdle()
+
+            assertEquals(SearchUiState.Results(listOf(typedResult)), awaitItem())
+            assertEquals(listOf("inter", "inter", "dune"), repository.queries)
+        }
+    }
+
     private fun content(title: String) = Content(
         id = "movie:$title",
         type = ContentType.Movie,
@@ -179,16 +339,22 @@ class SearchViewModelTest {
     )
 
     private class FakeSearchRepository(
-        private val result: List<Content> = emptyList(),
-        private val error: Throwable? = null,
+        var result: List<Content> = emptyList(),
+        var error: Throwable? = null,
+        private val delayMs: Long = 1,
     ) : SearchRepository {
         val queries = mutableListOf<String>()
 
         override suspend fun search(query: String): List<Content> {
             queries += query
-            delay(1) // force a real suspension so Loading isn't conflated away
-            error?.let { throw it }
-            return result
+            // Capture before suspending: a call already in flight must not observe a
+            // config mutation made after it started (otherwise a wrongly-uncancelled
+            // call would silently agree with the call that should have won).
+            val capturedResult = result
+            val capturedError = error
+            delay(delayMs) // force a real suspension so Loading isn't conflated away
+            capturedError?.let { throw it }
+            return capturedResult
         }
     }
 }

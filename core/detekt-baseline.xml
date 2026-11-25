@@ -1,0 +1,72 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>MagicNumber:AppTheme.kt:AppTheme.CinemaRed$0xFF111111</ID>
+    <ID>MagicNumber:AppTheme.kt:AppTheme.CinemaRed$0xFF1E1E1E</ID>
+    <ID>MagicNumber:AppTheme.kt:AppTheme.CinemaRed$0xFFA0A0A0</ID>
+    <ID>MagicNumber:AppTheme.kt:AppTheme.CinemaRed$0xFFE50914</ID>
+    <ID>MagicNumber:AppTheme.kt:AppTheme.DeepOcean$0xFF07152B</ID>
+    <ID>MagicNumber:AppTheme.kt:AppTheme.DeepOcean$0xFF102544</ID>
+    <ID>MagicNumber:AppTheme.kt:AppTheme.DeepOcean$0xFF3D8BFF</ID>
+    <ID>MagicNumber:AppTheme.kt:AppTheme.DeepOcean$0xFF8FA3C2</ID>
+    <ID>MagicNumber:AppTheme.kt:AppTheme.MidnightTeal$0xFF00C2A8</ID>
+    <ID>MagicNumber:AppTheme.kt:AppTheme.MidnightTeal$0xFF0B1220</ID>
+    <ID>MagicNumber:AppTheme.kt:AppTheme.MidnightTeal$0xFF16213A</ID>
+    <ID>MagicNumber:AppTheme.kt:AppTheme.MidnightTeal$0xFF9AA8C0</ID>
+    <ID>MagicNumber:AppTheme.kt:AppTheme.Purple$0xFF1A0530</ID>
+    <ID>MagicNumber:AppTheme.kt:AppTheme.Purple$0xFF2A0A4A</ID>
+    <ID>MagicNumber:AppTheme.kt:AppTheme.Purple$0xFF9B30FF</ID>
+    <ID>MagicNumber:AppTheme.kt:AppTheme.Purple$0xFFB9A8CC</ID>
+    <ID>MagicNumber:AppTheme.kt:AppTheme.WarmAmber$0xFF14110F</ID>
+    <ID>MagicNumber:AppTheme.kt:AppTheme.WarmAmber$0xFF241E1A</ID>
+    <ID>MagicNumber:AppTheme.kt:AppTheme.WarmAmber$0xFFB5A89A</ID>
+    <ID>MagicNumber:AppTheme.kt:AppTheme.WarmAmber$0xFFFFB020</ID>
+    <ID>MagicNumber:ContentDetails.kt:60</ID>
+    <ID>MagicNumber:HomeRepositoryImpl.kt:HomeRepositoryImpl$10</ID>
+    <ID>MagicNumber:HomeRepositoryImpl.kt:HomeRepositoryImpl$12</ID>
+    <ID>MagicNumber:HomeRepositoryImpl.kt:HomeRepositoryImpl$15</ID>
+    <ID>MagicNumber:Mappers.kt:15</ID>
+    <ID>MagicNumber:Mappers.kt:4</ID>
+    <ID>MagicNumber:NetworkModule.kt:NetworkModule$10_000</ID>
+    <ID>MagicNumber:NetworkModule.kt:NetworkModule$15_000</ID>
+    <ID>NewLineAtEndOfFile:AppTheme.kt:com.streambox.core.design.AppTheme.kt</ID>
+    <ID>NewLineAtEndOfFile:Content.kt:com.streambox.core.model.Content.kt</ID>
+    <ID>NewLineAtEndOfFile:ContentDetails.kt:com.streambox.core.model.ContentDetails.kt</ID>
+    <ID>NewLineAtEndOfFile:DetailsRepository.kt:com.streambox.core.ui.home.detail.DetailsRepository.kt</ID>
+    <ID>NewLineAtEndOfFile:DetailsRepositoryImpl.kt:com.streambox.core.ui.home.detail.DetailsRepositoryImpl.kt</ID>
+    <ID>NewLineAtEndOfFile:DetailsUiState.kt:com.streambox.core.ui.home.detail.DetailsUiState.kt</ID>
+    <ID>NewLineAtEndOfFile:DetailsViewModel.kt:com.streambox.core.ui.home.detail.DetailsViewModel.kt</ID>
+    <ID>NewLineAtEndOfFile:ExampleUnitTest.kt:com.streambox.core.ExampleUnitTest.kt</ID>
+    <ID>NewLineAtEndOfFile:HomeFeed.kt:com.streambox.core.model.HomeFeed.kt</ID>
+    <ID>NewLineAtEndOfFile:HomeRepository.kt:com.streambox.core.ui.home.HomeRepository.kt</ID>
+    <ID>NewLineAtEndOfFile:HomeRepositoryImpl.kt:com.streambox.core.ui.home.HomeRepositoryImpl.kt</ID>
+    <ID>NewLineAtEndOfFile:HomeUiState.kt:com.streambox.core.ui.home.HomeUiState.kt</ID>
+    <ID>NewLineAtEndOfFile:HomeViewModel.kt:com.streambox.core.ui.home.HomeViewModel.kt</ID>
+    <ID>NewLineAtEndOfFile:Mappers.kt:com.streambox.core.data.Mappers.kt</ID>
+    <ID>NewLineAtEndOfFile:NetworkModule.kt:com.streambox.core.di.NetworkModule.kt</ID>
+    <ID>NewLineAtEndOfFile:PlaybackService.kt:com.streambox.core.ui.playback.PlaybackService.kt</ID>
+    <ID>NewLineAtEndOfFile:PlayerViewModel.kt:com.streambox.core.ui.playback.PlayerViewModel.kt</ID>
+    <ID>NewLineAtEndOfFile:Rail.kt:com.streambox.core.model.Rail.kt</ID>
+    <ID>NewLineAtEndOfFile:SearchRepository.kt:com.streambox.core.ui.search.SearchRepository.kt</ID>
+    <ID>NewLineAtEndOfFile:SearchRepositoryImpl.kt:com.streambox.core.ui.search.SearchRepositoryImpl.kt</ID>
+    <ID>NewLineAtEndOfFile:SearchUiState.kt:com.streambox.core.ui.search.SearchUiState.kt</ID>
+    <ID>NewLineAtEndOfFile:SettingsViewModel.kt:com.streambox.core.ui.setting.SettingsViewModel.kt</ID>
+    <ID>NewLineAtEndOfFile:StreamResolver.kt:com.streambox.core.ui.playback.StreamResolver.kt</ID>
+    <ID>NewLineAtEndOfFile:ThemeRepository.kt:com.streambox.core.ui.setting.ThemeRepository.kt</ID>
+    <ID>NewLineAtEndOfFile:TmdbApi.kt:com.streambox.core.network.tmdb.TmdbApi.kt</ID>
+    <ID>NewLineAtEndOfFile:TmdbDtos.kt:com.streambox.core.network.tmdb.TmdbDtos.kt</ID>
+    <ID>NewLineAtEndOfFile:TmdbImages.kt:com.streambox.core.network.tmdb.TmdbImages.kt</ID>
+    <ID>NewLineAtEndOfFile:TvMazeApi.kt:com.streambox.core.network.tvmaze.TvMazeApi.kt</ID>
+    <ID>NewLineAtEndOfFile:TvMazeDtos.kt:com.streambox.core.network.tvmaze.TvMazeDtos.kt</ID>
+    <ID>NewLineAtEndOfFile:VehicleStatus.kt:com.streambox.core.vehicle.VehicleStatus.kt</ID>
+    <ID>ReturnCount:Mappers.kt:internal fun TmdbMediaDto.toContent: Content?</ID>
+    <ID>SwallowedException:HomeRepositoryImpl.kt:HomeRepositoryImpl$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:DetailsViewModel.kt:DetailsViewModel$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:HomeRepositoryImpl.kt:HomeRepositoryImpl$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:SearchViewModel.kt:SearchViewModel$e: Exception</ID>
+    <ID>WildcardImport:ExampleUnitTest.kt:import org.junit.Assert.*</ID>
+    <ID>WildcardImport:NetworkModule.kt:import io.ktor.client.plugins.*</ID>
+    <ID>WildcardImport:NetworkModule.kt:import io.ktor.client.plugins.logging.*</ID>
+  </CurrentIssues>
+</SmellBaseline>
