@@ -1,0 +1,82 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>CyclomaticComplexMethod:TvHomeScreen.kt:@OptIn(ExperimentalComposeUiApi::class, ExperimentalFoundationApi::class) @Composable private fun TvHomeContent</ID>
+    <ID>FunctionNaming:TvCards.kt:@Composable fun TvLandscapeCard</ID>
+    <ID>FunctionNaming:TvCards.kt:@Composable fun TvLogoCard</ID>
+    <ID>FunctionNaming:TvCards.kt:@Composable fun TvPosterCard</ID>
+    <ID>FunctionNaming:TvCards.kt:@Composable private fun TvBadge</ID>
+    <ID>FunctionNaming:TvDetailsScreen.kt:@Composable fun TvDetailsScreen</ID>
+    <ID>FunctionNaming:TvDetailsScreen.kt:@Composable private fun TvDetailsContent</ID>
+    <ID>FunctionNaming:TvHomeScreen.kt:@Composable fun TvHomeScreen</ID>
+    <ID>FunctionNaming:TvHomeScreen.kt:@Composable private fun HeroInfo</ID>
+    <ID>FunctionNaming:TvHomeScreen.kt:@OptIn(ExperimentalComposeUiApi::class, ExperimentalFoundationApi::class) @Composable private fun TvHomeContent</ID>
+    <ID>FunctionNaming:TvMainScreen.kt:@Composable private fun TvBackdrop</ID>
+    <ID>FunctionNaming:TvMainScreen.kt:@OptIn(ExperimentalComposeUiApi::class) @Composable fun TvMainScreen</ID>
+    <ID>FunctionNaming:TvNavHost.kt:@Composable fun TvNavHost</ID>
+    <ID>FunctionNaming:TvPlayerScreen.kt:@OptIn(UnstableApi::class) @Composable fun TvPlayerScreen</ID>
+    <ID>FunctionNaming:TvProfileScreen.kt:@Composable fun TvProfileScreen</ID>
+    <ID>FunctionNaming:TvProfileScreen.kt:@Composable private fun TvThemeSwatch</ID>
+    <ID>FunctionNaming:TvRailRow.kt:@OptIn(ExperimentalComposeUiApi::class) @Composable fun TvRailRow</ID>
+    <ID>FunctionNaming:TvSearchScreen.kt:@Composable fun TvSearchScreen</ID>
+    <ID>FunctionNaming:TvSearchScreen.kt:@Composable private fun TvMessage</ID>
+    <ID>FunctionNaming:TvSearchScreen.kt:@Composable private fun TvSearchField</ID>
+    <ID>FunctionNaming:TvTheme.kt:@Composable fun StreamBoxTvTheme</ID>
+    <ID>ImplicitDefaultLocale:TvHomeScreen.kt:"★ %.1f".format(it)</ID>
+    <ID>LongMethod:TvDetailsScreen.kt:@Composable private fun TvDetailsContent</ID>
+    <ID>LongMethod:TvHomeScreen.kt:@OptIn(ExperimentalComposeUiApi::class, ExperimentalFoundationApi::class) @Composable private fun TvHomeContent</ID>
+    <ID>LongMethod:TvMainScreen.kt:@OptIn(ExperimentalComposeUiApi::class) @Composable fun TvMainScreen</ID>
+    <ID>LongParameterList:TvRailRow.kt:@OptIn(ExperimentalComposeUiApi::class) @Composable fun TvRailRow</ID>
+    <ID>MagicNumber:StreamBoxTvApp.kt:StreamBoxTvApp$0.30</ID>
+    <ID>MagicNumber:StreamBoxTvApp.kt:StreamBoxTvApp$1024</ID>
+    <ID>MagicNumber:StreamBoxTvApp.kt:StreamBoxTvApp$200L</ID>
+    <ID>MagicNumber:TvCards.kt:16f</ID>
+    <ID>MagicNumber:TvCards.kt:3f</ID>
+    <ID>MagicNumber:TvCards.kt:9f</ID>
+    <ID>MagicNumber:TvDetailsScreen.kt:0.55f</ID>
+    <ID>MagicNumber:TvDetailsScreen.kt:0.65f</ID>
+    <ID>MagicNumber:TvDetailsScreen.kt:0.6f</ID>
+    <ID>MagicNumber:TvDetailsScreen.kt:5</ID>
+    <ID>MagicNumber:TvHomeScreen.kt:0.55f</ID>
+    <ID>MagicNumber:TvHomeScreen.kt:300</ID>
+    <ID>MagicNumber:TvMainScreen.kt:0.35f</ID>
+    <ID>MagicNumber:TvMainScreen.kt:0.6f</ID>
+    <ID>MagicNumber:TvMainScreen.kt:600</ID>
+    <ID>MagicNumber:TvPlayerScreen.kt:4_000</ID>
+    <ID>MagicNumber:TvProfileScreen.kt:8</ID>
+    <ID>MagicNumber:TvSearchScreen.kt:0.5f</ID>
+    <ID>MatchingDeclarationName:FocusUtils.kt:PinFocusedItem : BringIntoViewSpec</ID>
+    <ID>MatchingDeclarationName:TvMainScreen.kt:TvDestination</ID>
+    <ID>MaxLineLength:TvDetailsScreen.kt:Text(details.genres.joinToString(" · "), style = MaterialTheme.typography.bodyMedium, color = TvColors.Muted)</ID>
+    <ID>MaxLineLength:TvHomeScreen.kt:itemsIndexed</ID>
+    <ID>MaxLineLength:TvMainScreen.kt:TvDestination.Home -&gt; TvHomeScreen(onBackdropChange = { backdropUrl = it }, onContentClick = onContentClick)</ID>
+    <ID>MaxLineLength:TvSearchScreen.kt:Text("Search movies and series", color = TvColors.Muted, style = MaterialTheme.typography.titleLarge)</ID>
+    <ID>NewLineAtEndOfFile:FocusUtils.kt:com.streambox.tv.ui.focus.FocusUtils.kt</ID>
+    <ID>NewLineAtEndOfFile:StreamBoxTvApp.kt:com.streambox.tv.StreamBoxTvApp.kt</ID>
+    <ID>NewLineAtEndOfFile:TvCards.kt:com.streambox.tv.ui.components.TvCards.kt</ID>
+    <ID>NewLineAtEndOfFile:TvDetailsScreen.kt:com.streambox.tv.ui.home.detail.TvDetailsScreen.kt</ID>
+    <ID>NewLineAtEndOfFile:TvHomeScreen.kt:com.streambox.tv.ui.home.TvHomeScreen.kt</ID>
+    <ID>NewLineAtEndOfFile:TvMainScreen.kt:com.streambox.tv.ui.TvMainScreen.kt</ID>
+    <ID>NewLineAtEndOfFile:TvNavHost.kt:com.streambox.tv.ui.TvNavHost.kt</ID>
+    <ID>NewLineAtEndOfFile:TvPlayerScreen.kt:com.streambox.tv.ui.player.TvPlayerScreen.kt</ID>
+    <ID>NewLineAtEndOfFile:TvProfileScreen.kt:com.streambox.tv.ui.profile.TvProfileScreen.kt</ID>
+    <ID>NewLineAtEndOfFile:TvRailRow.kt:com.streambox.tv.ui.home.TvRailRow.kt</ID>
+    <ID>NewLineAtEndOfFile:TvSearchScreen.kt:com.streambox.tv.ui.search.TvSearchScreen.kt</ID>
+    <ID>NewLineAtEndOfFile:TvTheme.kt:com.streambox.tv.ui.theme.TvTheme.kt</ID>
+    <ID>WildcardImport:TvCards.kt:import androidx.compose.foundation.layout.*</ID>
+    <ID>WildcardImport:TvCards.kt:import androidx.tv.material3.*</ID>
+    <ID>WildcardImport:TvHomeScreen.kt:import androidx.compose.foundation.layout.*</ID>
+    <ID>WildcardImport:TvHomeScreen.kt:import androidx.compose.runtime.*</ID>
+    <ID>WildcardImport:TvMainScreen.kt:import androidx.compose.foundation.layout.*</ID>
+    <ID>WildcardImport:TvMainScreen.kt:import androidx.compose.material.icons.outlined.*</ID>
+    <ID>WildcardImport:TvMainScreen.kt:import androidx.compose.runtime.*</ID>
+    <ID>WildcardImport:TvMainScreen.kt:import androidx.tv.material3.*</ID>
+    <ID>WildcardImport:TvPlayerScreen.kt:import androidx.compose.runtime.*</ID>
+    <ID>WildcardImport:TvProfileScreen.kt:import androidx.compose.foundation.layout.*</ID>
+    <ID>WildcardImport:TvProfileScreen.kt:import androidx.tv.material3.*</ID>
+    <ID>WildcardImport:TvRailRow.kt:import androidx.compose.foundation.layout.*</ID>
+    <ID>WildcardImport:TvSearchScreen.kt:import androidx.compose.ui.input.key.*</ID>
+    <ID>WildcardImport:TvTheme.kt:import androidx.compose.runtime.*</ID>
+  </CurrentIssues>
+</SmellBaseline>

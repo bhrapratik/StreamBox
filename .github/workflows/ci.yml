@@ -26,6 +26,9 @@ jobs:
       - name: Lint
         run: ./gradlew lintDebug
 
+      - name: Detekt
+        run: ./gradlew detekt
+
       - name: Agent config sanity
         run: |
           for f in .claude/skills/*/SKILL.md .claude/agents/*.md; do

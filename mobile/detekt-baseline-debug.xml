@@ -1,0 +1,11 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>MagicNumber:StreamBoxApp.kt:StreamBoxApp$0.25</ID>
+    <ID>MagicNumber:StreamBoxApp.kt:StreamBoxApp$100L</ID>
+    <ID>MagicNumber:StreamBoxApp.kt:StreamBoxApp$1024</ID>
+    <ID>NewLineAtEndOfFile:MainActivity.kt:com.streambox.mobile.MainActivity.kt</ID>
+    <ID>NewLineAtEndOfFile:StreamBoxApp.kt:com.streambox.mobile.StreamBoxApp.kt</ID>
+  </CurrentIssues>
+</SmellBaseline>
